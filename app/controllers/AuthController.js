@@ -16,22 +16,22 @@ const usernameIsExist = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        const reject = {
+            usernameStatus: false,
+            errors: errors.array(), 
+        };
+
+        return res.status(400).json(res.error(reject));
     }
 
-    return res.json(username);
-
-    const options = {
-        where: { 
-            [Op.or]: [{name: username}, {phone_number: username}, {email: username}]
-        }
-    };
-
     try {
-        const user = await User.findOne(options);
-        const result = {
-            "usernameIsExist": !(user === null)
+        const options = {
+            where: { 
+                [Op.or]: [{name: username}, {phone_number: username}, {email: username}]
+            }
         };
+        const user = await User.findOne(options);
+        const result = { usernameStatus: !(user === null) };
 
         return res.json(res.success(result));
     } catch (error) {
