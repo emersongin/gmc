@@ -2,33 +2,36 @@
 
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('users', {
+        await queryInterface.createTable('regions', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            display_name: {
+            city: {
                 type: Sequelize.STRING
             },
-            username: {
+            state: {
                 type: Sequelize.STRING
             },
-            email: {
+            country: {
                 type: Sequelize.STRING
             },
-            phone_number: {
+            region: {
                 type: Sequelize.STRING
             },
-            password: {
+            uf: {
                 type: Sequelize.STRING
             },
-            password_lastupdate: {
-                type: Sequelize.DATE
-            },
-            user_validation: {
-                type: Sequelize.BOOLEAN
+            id_geolocation: {
+                type: Sequelize.BIGINT,
+                references: {
+                    model: {
+                        tableName: 'geolocations',
+                    },
+                    key: 'id'
+                },
             },
             created_at: {
                 allowNull: false,
@@ -41,6 +44,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('users');
+        // does not do anything
     }
 };
