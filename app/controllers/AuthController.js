@@ -1,5 +1,5 @@
 
-const User = require('../models/User');
+const User = require('../models').User;
 const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 
@@ -26,9 +26,7 @@ const usernameIsExist = async (req, res) => {
 
     try {
         const options = {
-            where: { 
-                [Op.or]: [{username}, {phone_number: username}, {email: username}]
-            }
+            where: { username }
         };
         const user = await User.findOne(options);
         const result = { usernameStatus: !(user === null) };
