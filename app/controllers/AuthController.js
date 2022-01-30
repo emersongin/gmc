@@ -27,7 +27,7 @@ const usernameIsExist = async (req, res) => {
     try {
         const options = {
             where: { 
-                [Op.or]: [{name: username}, {phone_number: username}, {email: username}]
+                [Op.or]: [{username}, {phone_number: username}, {email: username}]
             }
         };
         const user = await User.findOne(options);

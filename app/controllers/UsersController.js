@@ -3,6 +3,7 @@ const User = require('../models/User');
 const show = async (req, res) => {
     const { id } = req.params;
 
+    await User.sync();
     const user = await User.findByPk(id);
 
     return user === null ? res.json('Not found!') : res.json(user);
