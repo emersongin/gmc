@@ -1,5 +1,8 @@
 
+const { QueryTypes } = require('../models').Sequelize;
+const sequelize = require('../models').sequelize;
 const User = require('../models').User;
+
 const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 
@@ -25,13 +28,24 @@ const usernameIsExist = async (req, res) => {
     }
 
     try {
-        const options = {
-            where: { username }
-        };
-        const user = await User.findOne(options);
-        const result = { usernameStatus: !(user === null) };
 
-        return res.json(res.success(result));
+        const sql = `
+            SELECT
+                COUNT(u.username) = 0 as username
+            FROM
+                users u
+            WHERE
+                u.username = $username
+        `;
+
+        const [ result ] = await sequelize.query(sql,
+            {
+                bind: { username }, 
+                type: QueryTypes.SELECT
+            }
+        );
+
+        return res.json(res.success({ usernameValid: result.username }));
     } catch (error) {
         res.json(res.error({error}));
 

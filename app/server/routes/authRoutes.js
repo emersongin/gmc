@@ -12,26 +12,17 @@ routes.get('/isusername', checkSchema({
         custom: {
             errorMessage: 'Nome de usuário inválido.',
             options: value => {
-                const phoneNumber = value.replace(/[^0-9]/g, '');
+                const usernameRegex = /^[^\d ]{4}[a-z_\d]{2,10}/g;
+                const usernameSize = (value.length > 5 && value.length < 14);
 
-                const initNumbers = (/^[0-9]{3}/g).exec(phoneNumber);
-                const startPhoneNumber = (/^[1-9]{2}9/g).exec(phoneNumber);
-
-                if(startPhoneNumber) return (phoneNumber.length === 11) ? true : false;
-                if(initNumbers) return (startPhoneNumber) ? true : false;
-
-                return true;
+                return usernameRegex.exec(value) && usernameSize;
             }
         },
         customSanitizer: {
             errorMessage: 'Nome de usuário deve conter pelo menos 8 caracteres.',
             options: value => {
-                const phoneNumber = value.replace(/[^0-9]/g, '');
-                const isPhoneNumber = (/^[1-9]{2}9/g).exec(phoneNumber);
-
-                if(isPhoneNumber) return phoneNumber;
-
-                return value;
+                
+                return value.toLowerCase();
 
             },
         },
