@@ -4,7 +4,6 @@ const sequelize = require('../models').sequelize;
 const User = require('../models').User;
 
 const { Op } = require('sequelize');
-const { validationResult } = require('express-validator');
 
 const login = async (req, res) => {
 
@@ -16,16 +15,6 @@ const validateToken = async (req, res) => {
 
 const usernameIsExist = async (req, res) => {
     const { username } = req.body;
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        const reject = {
-            usernameStatus: false,
-            errors: errors.array(), 
-        };
-
-        return res.status(400).json(res.error(reject));
-    }
 
     try {
 
