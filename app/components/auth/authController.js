@@ -1,7 +1,7 @@
 
-const { QueryTypes } = require('../models').Sequelize;
-const sequelize = require('../models').sequelize;
-const User = require('../models').User;
+const { QueryTypes } = require('../../models').Sequelize;
+const sequelize = require('../../models').sequelize;
+const User = require('../../models').User;
 
 const { Op } = require('sequelize');
 

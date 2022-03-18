@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
+
+    console.log(DataTypes);
     
     User.init({
         display_name: DataTypes.STRING,
