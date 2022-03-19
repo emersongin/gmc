@@ -1,8 +1,11 @@
 const express = require('express');
 const usersController = require('./usersController');
-// const routes = express.Router();
+const routes = express.Router();
 
-// routes.get('/:id', usersController.show);
-// routes.post('/', usersController.store);
+routes.get('/:id', usersController.show);
+routes.post('/', usersController.store);
 
-// module.exports = routes;
+module.exports = app => {
+    app.use('/users', routes);
+    
+};

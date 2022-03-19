@@ -1,22 +1,21 @@
-const express = require('express');
-const env = require('../env');
-const db = require('../app/database');
-const app = express();
-const consign = require('consign');
+require('dotenv').config();
 
+const db = require('../app/config/database');
+const express = require('express');
+const consign = require('consign');
+const app = express();
 
 consign({
         cwd: 'app',
         locale: 'pt-br'
     })
-    .include('models/index')
+    .include('models/index.js')
+    .then('middlewares/index.js')
     .then('components')
-    .then('middlewares')
-    .then('routers')
     .into(app);
 
 app.db = db;
 
-app.listen(env.SERVER_PORT, env.SERVER_HOST, () => {
-    console.log(`rodando host: ${env.SERVER_HOST}, port: ${env.SERVER_PORT}`);
+app.listen(process.env.SERVER_PORT, process.env.SERVER_HOST, () => {
+    console.log(`rodando host: ${process.env.SERVER_HOST}, port: ${process.env.SERVER_PORT}`);
 });

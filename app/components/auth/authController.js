@@ -5,22 +5,15 @@ const User = require('../../models').User;
 
 const { Op } = require('sequelize');
 
-const login = async (req, res) => {
 
-};
-
-const validateToken = async (req, res) => {
-
-};
-
-const usernameIsExist = async (req, res) => {
+const username = async (req, res) => {
     const { username } = req.body;
 
     try {
 
         const sql = `
             SELECT
-                COUNT(u.username) = 0 as username
+                COUNT(u.username) > 0 as username
             FROM
                 users u
             WHERE
@@ -54,9 +47,15 @@ const createAccont = async (req, res) => {
 
 };
 
+const login = async (req, res) => {
+};
+
+const validateToken = async (req, res) => {
+};
+
 module.exports = { 
+    username, 
+    createAccont,
     login, 
-    validateToken, 
-    usernameIsExist, 
-    createAccont 
+    validateToken
 };

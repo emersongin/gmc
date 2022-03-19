@@ -34,19 +34,17 @@ const show = async (req, res) => {
 };
 
 const store = async (req, res) => {
-    const { name, password } = req.body;
+    const { username, password } = req.body;
 
-    const user = await User.create({ name, password });
+    const user = await User.create({ username, password });
 
     return res.json(user);
 };
 
 const update = async (req, res) => {
-
 };
 
 const destroy = async (req, res) => {
-
 };
 
 module.exports = { show, store, update, destroy };
