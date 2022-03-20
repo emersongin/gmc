@@ -36,9 +36,14 @@ const show = async (req, res) => {
 const store = async (req, res) => {
     const { username, password } = req.body;
 
-    const user = await User.create({ username, password });
+    try {
+        const user = await User.create({ username, password });
 
-    return res.json(user);
+        return res.success(user, 201);
+    } catch (error) {
+        return res.error(error, 500);
+    }
+
 };
 
 const update = async (req, res) => {
