@@ -3,6 +3,19 @@ const sequelize = require('../../models').sequelize;
 const User = require('../../models').User;
 
 const show = async (req, res) => {
+
+    req.Validator.setup(req.params, {
+        id: [
+            {type: 'required', params: true}
+        ]
+    });
+
+    if(req.Validator.validate()) {
+        req.params = req.Validator.dataList();
+    } else {
+        return res.error(req.Validator.errorsList());
+    }
+
     const { id } = req.params;
 
     const sql = `
@@ -30,7 +43,7 @@ const show = async (req, res) => {
         }
     );
 
-    return result ? res.json(result) : res.json(false);
+    return result ? res.success(result) : res.error(false, 204);
 };
 
 const store = async (req, res) => {
