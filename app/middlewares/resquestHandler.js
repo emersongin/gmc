@@ -2,6 +2,7 @@ const Validator = require('../includes/Validator');
 
 module.exports = (req, res, next) => {
     req.Validator = Validator; 
+    req.Validator.setup();
 
     next();
 };

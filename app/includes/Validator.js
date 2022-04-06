@@ -1,12 +1,10 @@
 module.exports = class Validator {
-    static result = true;
-    static data = {};
-    static validations = {};
-    static errors = [];
 
-    static setup(data, validations) {
+    static setup(data, validations, erros) {
+        this.result = true;
         this.data = data || {};
         this.validations = validations || {};
+        this.errors = erros || [];
 
     }
 
@@ -64,6 +62,12 @@ module.exports = class Validator {
             case 'required':
                 return this.validateRequired(value, validation.params);
                 break;
+            case 'number':
+                return this.validateNumber(value, validation.params);
+                break;
+            case 'username':
+                return this.validateUsername(value, validation.params);
+                break;
             case 'size':
                 return this.validateSize(value, validation.params);
                 break;
@@ -82,10 +86,28 @@ module.exports = class Validator {
             params.length > 1 ? params : [params[0], Infinity] : [params, Infinity];
     }
 
-    static validateRequired(value, params) {
-        let required = this.filterOneParams(params);
+    static validateRequired(value, required) {
+        required = this.filterOneParams(required);
 
-        return (value && required);
+        return ((value !== null && value !== undefined && value !== '') && required);
+    }
+
+    static validateNumber(value, positive) {
+        positive = this.filterOneParams(positive);
+
+        if (isNaN(value)) return false;
+
+        return positive ? Number(value) > 0 : Number(value);
+    }
+
+    static validateUsername(value, params) {
+        params = this.filterOneParams(params);
+
+        if(typeof value !=="string" || value.length <= 6) return false; 
+        if(isNaN(value[0]) == false) return false;
+        if(value.match(/ /gi) && value.match(/ /gi).length > 0) return false;
+
+        return true;
     }
 
     static validateSize(value, params) {
@@ -99,10 +121,25 @@ module.exports = class Validator {
         return value;
     }
 
+    static isInt(n){
+        return Number(n) === n && n % 1 === 0;
+    }
+    
+    static isFloat(n){
+        return Number(n) === n && n % 1 !== 0;
+    }
+
+    static sanitazationNumber(value) {
+        return isInt(value) ? parseInt(value) : isFloat(value) ? parseFloat(value) : Number(value);
+    }
+
     static sanitizations(value, validation = { type: null, params: null }) {
         switch (validation.type) {
             case 'required':
                 return this.sanitazationRequired(value, validation.params);
+                break;
+            case 'number':
+                return this.sanitazationNumber(value, validation.params);
                 break;
             default:
                 return value;
