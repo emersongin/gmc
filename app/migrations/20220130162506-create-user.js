@@ -13,22 +13,38 @@ module.exports = {
                 type: Sequelize.STRING
             },
             username: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING(20),
+                allowNull: false,
+                unique: true,
+                validate: {
+                    len: [6, 20]
+                },
             },
             email: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                validate: {
+                    isEmail: true,
+                },
             },
             phone_number: {
                 type: Sequelize.STRING
             },
             password: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING(64),
+                validate: {
+                    is: /^[0-9a-f]{64}$/i
+                },
             },
             password_lastupdate: {
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
             user_validation: {
-                type: Sequelize.BOOLEAN
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+            },
+            access_token: {
+                type: Sequelize.STRING
             },
             created_at: {
                 allowNull: false,

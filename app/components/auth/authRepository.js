@@ -6,23 +6,9 @@ const { Op } = require('sequelize');
 
 const findUsername = async (username, res) => {
     try {
-        const sql = `
-            SELECT
-                COUNT(u.username) > 0 as username
-            FROM
-                users u
-            WHERE
-                u.username = $username
-        `;
+        const user = await User.findOne({ where: { username } });
 
-        const [ result ] = await sequelize.query(sql,
-            {
-                bind: { username }, 
-                type: QueryTypes.SELECT
-            }
-        );
-
-        return res.success({ usernameValid: result.username });
+        return res.success({ validUsername: user === null });
     } catch (error) {
         return res.error({ error: "SQL error!"}, 500);
     }

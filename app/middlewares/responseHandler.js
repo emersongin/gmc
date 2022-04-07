@@ -2,16 +2,11 @@ module.exports = (req, res, next) => {
     const respond = params => {
         res.status(params.status);
         
-        return res.json({
-            result: params.result,
-            status: params.status,
-            data: params.data
-        });
+        return res.json(params.data);
     };
 
     const success = (data, codeStatus) => {
         return respond({
-            result: true,
             status: codeStatus || 200,
             data: data || []
         });
@@ -19,7 +14,6 @@ module.exports = (req, res, next) => {
     
     const error = (error, codeStatus) => {
         return respond({
-            result: false,
             status: codeStatus || 400,
             data: error || []
         });

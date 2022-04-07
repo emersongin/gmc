@@ -19,14 +19,28 @@ const username = async (req, res) => {
 }
 
 const createAccont = async (req, res) => {
-    // const 
+    req.Validator.setup(req.body, {
+        username: [
+            { type: 'username', params: true }
+        ],
+        email: [
+            { type: 'email', params: true }
+        ],
+        phone_number: [
+            { type: 'brazilianPhoneNumber', params: true }
+        ],
+        password: [
+            { type: 'password', params: true }
+        ],
+    });
 
+    if(req.Validator.validate()) {
+        req.body = req.Validator.dataList();
+    } else {
+        return res.error(req.Validator.errorsList());
+    }
 
-    // display_name
-    // name
-    // email
-    // phone_number
-    // password
+    return res.success(req.body);
 
 };
 

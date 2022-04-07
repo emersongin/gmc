@@ -10,12 +10,7 @@ module.exports = class Validator {
 
     static errorsList() {
         return this.errors.map(erro => {
-            return {
-                key: erro.key,
-                value: erro.value,
-                validation: erro.validation.type,
-                params: erro.validation.params
-            };
+            return erro;
         });
     }
 
@@ -24,6 +19,11 @@ module.exports = class Validator {
     }
 
     static validate() {
+        if(Object.keys(this.data).length === 0) {
+            this.errors.push({ error: 'some params are required!' });
+            return false; 
+        }
+
         let dataMap = Object.entries(this.data);
 
         dataMap = dataMap.map(data => {
@@ -68,6 +68,15 @@ module.exports = class Validator {
             case 'username':
                 return this.validateUsername(value, validation.params);
                 break;
+            case 'email':
+                return this.validateEmail(value, validation.params);
+                break;
+            case 'pasword':
+                return this.validatePassword(value, validation.params);
+                break;
+            case 'brazilianPhoneNumber':
+                return this.validateBrazilianPhoneNumber(value, validation.params);
+                break;
             case 'size':
                 return this.validateSize(value, validation.params);
                 break;
@@ -103,11 +112,36 @@ module.exports = class Validator {
     static validateUsername(value, params) {
         params = this.filterOneParams(params);
 
-        if(typeof value !=="string" || value.length <= 6) return false; 
+        if(typeof value !=="string" || value.length <= 6 || value.length > 20) return false; 
         if(isNaN(value[0]) == false) return false;
         if(value.match(/ /gi) && value.match(/ /gi).length > 0) return false;
 
-        return true;
+        return params;
+    }
+
+    static validateEmail(value, params) {
+        params = this.filterOneParams(params);
+
+        let match = value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+
+        return match && match.length > 0 && params;
+    }
+
+    static validatePassword(value, params) {
+        params = this.filterOneParams(params);
+
+        let match = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/);
+
+        if(typeof value !=="string") return false; 
+        if(match && match.length <= 0) return false;
+
+        return params;
+    }
+
+    static validateBrazilianPhoneNumber(value, params) {
+        let match = value.match(/\(?\d{2,}\)?\ ??\ ?\d{4,}\-?\d{4}/g);
+
+        return match && match.length > 0 && params;
     }
 
     static validateSize(value, params) {
@@ -133,13 +167,27 @@ module.exports = class Validator {
         return isInt(value) ? parseInt(value) : isFloat(value) ? parseFloat(value) : Number(value);
     }
 
-    static sanitizations(value, validation = { type: null, params: null }) {
+    static sanitazationEmail(value) {
+        return value.toLowerCase();
+    }
+
+    static sanitazationBrazilianPhoneNumber(value) {
+        return value.replace(/[^\d]/g, '');
+    }
+
+    static sanitizations(value, validation = { type: null }) {
         switch (validation.type) {
             case 'required':
-                return this.sanitazationRequired(value, validation.params);
+                return this.sanitazationRequired(value);
                 break;
             case 'number':
-                return this.sanitazationNumber(value, validation.params);
+                return this.sanitazationNumber(value);
+                break;
+            case 'email':
+                return this.sanitazationEmail(value);
+                break;
+            case 'brazilianPhoneNumber':
+                return this.sanitazationBrazilianPhoneNumber(value);
                 break;
             default:
                 return value;
