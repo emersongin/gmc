@@ -65,8 +65,7 @@ const login = async (req, res) => {
 
     const user = req.body;
 
-    return res.success(user);
-
+    return authRepository.validateLogin(user, res);
 };
 
 const validateToken = async (req, res) => {

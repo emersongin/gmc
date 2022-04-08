@@ -33,7 +33,24 @@ const insertUser = async (user, res) => {
     }
 }
 
+const validateLogin = async (user, res) => {
+    try {
+        const data = await User.findOne({ where: { username: user.username } });
+
+        if(!data) return res.error({error: 'username or password not found!'}, 404);
+
+        const comparePass = bcrypt.compareSync(user.password, data.password);
+
+        if(!comparePass) return res.error({error: 'username or password not found!'}, 404);
+
+        return res.success(data.id);
+    } catch (error) {
+        return res.error(error, 500);
+    }
+}
+
 module.exports = {
     findUsername,
-    insertUser
+    insertUser,
+    validateLogin
 };
