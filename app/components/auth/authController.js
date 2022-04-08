@@ -40,7 +40,9 @@ const createAccont = async (req, res) => {
         return res.error(req.Validator.errorsList());
     }
 
-    return res.success(req.body);
+    const user = req.body;
+
+    return authRepository.insertUser(user, res);
 
 };
 
