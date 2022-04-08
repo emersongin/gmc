@@ -4,7 +4,7 @@ const routes = express.Router();
 
 routes.get('/username/:username', authController.username);
 routes.post('/createaccont', authController.createAccont);
-routes.post('/login', authController.login);
+routes.post('/login', authController.validateLogin);
 
 module.exports = app => {
     app.use('/auth', routes);

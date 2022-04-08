@@ -34,7 +34,7 @@ const insertUser = async (user, res) => {
     }
 }
 
-const validateLogin = async (login, res) => {
+const validateUser = async (login, res) => {
     try {
         const user = await User.findOne({ where: { username: login.username } });
 
@@ -63,5 +63,5 @@ const validateLogin = async (login, res) => {
 module.exports = {
     findUsername,
     insertUser,
-    validateLogin
+    validateUser,
 };

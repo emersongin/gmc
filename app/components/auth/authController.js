@@ -45,7 +45,7 @@ const createAccont = async (req, res) => {
     return authRepository.insertUser(user, res);
 };
 
-const login = async (req, res) => {
+const validateLogin = async (req, res) => {
     req.Validator.setup(req.body, {
         username: [
             { type: 'text', params: true },
@@ -65,7 +65,7 @@ const login = async (req, res) => {
 
     const user = req.body;
 
-    return authRepository.validateLogin(user, res);
+    return authRepository.validateUser(user, res);
 };
 
 const validateToken = async (req, res) => {
@@ -74,6 +74,6 @@ const validateToken = async (req, res) => {
 module.exports = { 
     username, 
     createAccont,
-    login, 
-    validateToken
+    validateLogin, 
+    validateToken,
 };
