@@ -33,23 +33,20 @@ module.exports = class Validator {
             let validations = this.validations[key];
 
             if(originData && validations) {
-                for (const validation of validations) {
+                for (const validation of validations) {  console.log(validation);
                     if(this.validationTest(value, validation)) {
                         originData[key] = this.sanitizations(value, validation);
-    
-                        return originData;
-    
+
                     } else {
     
                         this.result = false;
                         this.errors.push({ key, value, validation });
-    
-                        return originData;
+
                     };
                 }
-
             }
 
+            return originData;
         });
 
         this.data = dataMap.reduce((obj, data) => Object.assign(obj, data));
@@ -64,6 +61,9 @@ module.exports = class Validator {
                 break;
             case 'number':
                 return this.validateNumber(value, validation.params);
+                break;
+            case 'text':
+                return this.validateText(value, validation.params);
                 break;
             case 'username':
                 return this.validateUsername(value, validation.params);
@@ -109,6 +109,14 @@ module.exports = class Validator {
         return positive ? Number(value) > 0 : Number(value);
     }
 
+    static validateText(value, params) {
+        params = this.filterOneParams(params);
+
+        if (typeof value !== 'string') return false;
+
+        return params;
+    }
+
     static validateUsername(value, params) {
         params = this.filterOneParams(params);
 
@@ -150,10 +158,6 @@ module.exports = class Validator {
         return number >= min && number <= max;
     }
 
-    static sanitazationRequired(value) {
-        return value;
-    }
-
     static isInt(n){
         return Number(n) === n && n % 1 === 0;
     }
@@ -176,9 +180,6 @@ module.exports = class Validator {
 
     static sanitizations(value, validation = { type: null }) {
         switch (validation.type) {
-            case 'required':
-                return this.sanitazationRequired(value);
-                break;
             case 'number':
                 return this.sanitazationNumber(value);
                 break;
