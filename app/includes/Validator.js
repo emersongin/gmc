@@ -71,7 +71,7 @@ module.exports = class Validator {
             case 'email':
                 return this.validateEmail(value, validation.params);
                 break;
-            case 'pasword':
+            case 'password':
                 return this.validatePassword(value, validation.params);
                 break;
             case 'brazilianPhoneNumber':
@@ -132,8 +132,7 @@ module.exports = class Validator {
 
         let match = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/);
 
-        if(typeof value !=="string") return false; 
-        if(match && match.length <= 0) return false;
+        if(typeof value !=="string" || !match) return false; 
 
         return params;
     }
