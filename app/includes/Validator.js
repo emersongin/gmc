@@ -33,7 +33,7 @@ module.exports = class Validator {
             let validations = this.validations[key];
 
             if(originData && validations) {
-                for (const validation of validations) {  console.log(validation);
+                for (const validation of validations) {
                     if(this.validationTest(value, validation)) {
                         originData[key] = this.sanitizations(value, validation);
 

@@ -1,5 +1,6 @@
 
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { QueryTypes } = require('../../models').Sequelize;
 const sequelize = require('../../models').sequelize;
@@ -33,17 +34,27 @@ const insertUser = async (user, res) => {
     }
 }
 
-const validateLogin = async (user, res) => {
+const validateLogin = async (login, res) => {
     try {
-        const data = await User.findOne({ where: { username: user.username } });
+        const user = await User.findOne({ where: { username: login.username } });
 
-        if(!data) return res.error({error: 'username or password not found!'}, 404);
+        if(!user) return res.error({error: 'username or password not found!'}, 404);
 
-        const comparePass = bcrypt.compareSync(user.password, data.password);
+        const comparePass = bcrypt.compareSync(login.password, user.password);
 
         if(!comparePass) return res.error({error: 'username or password not found!'}, 404);
 
-        return res.success(data.id);
+        const token = jwt.sign({ 
+            display_name: user.display_name,
+            username: user.username
+        }, process.env.JWT_SECRET, { expiresIn: 60 * 60 });
+
+        const update = await User.update(
+            { access_token: token },
+            { where: { id: user.id } }
+        );
+
+        return update ? res.success({ token }) : res.error({ error: 'token not update!' });
     } catch (error) {
         return res.error(error, 500);
     }
