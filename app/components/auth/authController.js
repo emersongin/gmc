@@ -68,12 +68,8 @@ const validateLogin = async (req, res) => {
     return authRepository.validateUser(user, res);
 };
 
-const validateToken = async (req, res) => {
-};
-
 module.exports = { 
     username, 
     createAccont,
-    validateLogin, 
-    validateToken,
+    validateLogin,
 };
